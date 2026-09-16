@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tirage au sort{% endblock %}
+
+{% block body %}
+    <div style="max-width: 400px; margin: 40px auto; font-family: sans-serif;">
+        <h2>Tirage au sort</h2>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            {% for num in numbers %}
+                <div style="
+                    padding: 15px;
+                    color: white;
+                    text-align: center;
+                    font-size: 24px;
+                    font-weight: bold;
+                    border-radius: 5px;
+                    {% if num % 2 == 0 %}
+                        background-color: red;
+                    {% else %}
+                        background-color: black;
+                    {% endif %}
+                ">
+                    {{ num }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
