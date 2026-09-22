@@ -4,27 +4,33 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h1>Liste des ingrédients</h1>
+    <h1 class="mb-4">Liste des ingrédients</h1>
 
-    <table class="table table-hover mt-4">
-        <thead>
-            <tr>
-                <th scope="col">Numéro</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Prix</th>
-                <th scope="col">Date de création</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ingredient in ingredients %}
+    {% if ingredients is not empty %}
+        <table class="table table-striped table-hover table-bordered align-middle">
+            <thead class="table-dark">
                 <tr>
-                    <th scope="row">{{ ingredient.id }}</th>
-                    <td>{{ ingredient.name }}</td>
-                    <td>{{ ingredient.price }} €</td>
-                    <td>{{ ingredient.creatdAt|date('d/m/Y') }}</td>
+                    <th scope="col">N°</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prix (EUR)</th>
+                    <th scope="col">Date de création</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for ingredient in ingredients %}
+                    <tr>
+                        <th scope="row">{{ ingredient.id }}</th>
+                        <td>{{ ingredient.name }}</td>
+                        <td>{{ ingredient.price|number_format(2, ',', ' ') }} €</td>
+                        <td>{{ ingredient.creatdAt ? ingredient.creatdAt|date('d/m/Y') : '-' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            Aucun ingrédient n'a été trouvé.
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
