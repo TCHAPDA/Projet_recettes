@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un ingrédient{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Créer un nouvel ingrédient</h1>
+
+    {# Affichage du formulaire généré par Symfony #}
+    {{ form_start(form, {'action': path('ingredient.store'), 'method': 'POST'}) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_ingredient') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+</div>
+{% endblock %}
