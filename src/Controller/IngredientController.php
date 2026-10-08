@@ -3,17 +3,20 @@
 namespace App\Controller;
 
 use App\Repository\IngredientRepository;
+use App\Form\IngredientFormType;
+use App\Form\IngredientFormType_v3;
+use App\Entity\Ingredient;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
-use App\Entity\Ingredient;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+
 
 final class IngredientController extends AbstractController
 {
@@ -174,4 +177,181 @@ final class IngredientController extends AbstractController
         //     'form' => $crea_form->createView(),
         // ]);
         // }
+
+    // deuxieme methode de la mission 13
+    //cette route gere a la fois l'affichage et la soumission des données
+    #[Route('/ingredient/create_and_store', name: 'ingredient.create_and_store', methods: ['GET','POST'])]
+    public function create_and_store(Request $request, EntityManagerInterface $entity_manager): Response
+    {
+        //instanciation de l'objet ingredient
+        $ingredient = new Ingredient();
+
+        // 14. Date de création automatique (exclue du formulaire HTML)
+        // Si tu as un attribut createdAt dans ton entité Ingredient :
+        if (method_exists($ingredient, 'setCreatedAt')) {
+            $ingredient->setCreatedAt(new \DateTimeImmutable());
+        }
+        //construction du form avec les element nom et price des ingredient
+        $crea_form = $this->createFormBuilder($ingredient)
+            ->add('name', TextType::class, [
+                'label' => 'Nom de l\'ingrédient'
+            ])
+            ->add('price', MoneyType::class, [
+                'label' => 'Prix'
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Enregistrer'
+            ])
+            ->getForm();
+        
+        //
+        $crea_form->handleRequest($request);  
+        //verif de la soumission et de la validation du formulaire
+        if($crea_form->isSubmitted() && $crea_form->isValid()){
+            //recup des donnees du form
+            $data = $crea_form->getData();
+            // permet d'inspecter data lors du test
+            //dd($data);
+            // Affectation explicite (grâce au FormBuilder lié à l'entité, 
+            // $ingredient est déjà hydraté par Symfony, mais on peut réassigner si besoin) :
+            $ingredient->setName($data->getName());
+            $ingredient->setPrice($data->getPrice());
+
+            // Persistance et enregistrement en BDD
+            $entity_manager->persist($ingredient);
+            $entity_manager->flush();
+
+            // Redirection vers la liste des ingrédients
+            return $this->redirectToRoute('app_ingredient');
+        }
+        // Si le formulaire n'a pas été soumis ou n'est pas valide (phase GET)
+        return $this->render('ingredient/create_and_store.html.twig', [
+            'form' => $crea_form->createView(),
+        ]);
+    }
+
+    //methode 3
+    #[Route('/ingredient/create_and_store_v2', name: 'ingredient.create_and_store_v2', methods: ['GET','POST'])]
+    public function create_and_store_v2(Request $request, EntityManagerInterface $entity_manager): Response
+    {
+        //instanciation de l'objet ingredient
+        $ingredient = new Ingredient();
+
+        // 14. Date de création automatique (exclue du formulaire HTML)
+        // Si tu as un attribut createdAt dans ton entité Ingredient :
+        if (method_exists($ingredient, 'setCreatedAt')) {
+            $ingredient->setCreatedAt(new \DateTimeImmutable());
+        }
+        //construction du form avec les element nom et price des ingredient
+        $crea_form = $this->createForm(IngredientFormType::class, $ingredient);
+        
+        //
+        $crea_form->handleRequest($request);  
+        //verif de la soumission et de la validation du formulaire
+        if($crea_form->isSubmitted() && $crea_form->isValid()){
+            //recup des donnees du form
+            $data = $crea_form->getData();
+            // permet d'inspecter data lors du test
+            //dd($data);
+            // Affectation explicite (grâce au FormBuilder lié à l'entité, 
+            // $ingredient est déjà hydraté par Symfony, mais on peut réassigner si besoin) :
+            // $ingredient->setName($data->getName());
+            // $ingredient->setPrice($data->getPrice());
+
+            // Persistance et enregistrement en BDD
+            $entity_manager->persist($ingredient);
+            $entity_manager->flush();
+
+            // 9. Ajout du message flash
+            $this->addFlash('success', 'Votre ingrédient a bien été créé avec succès !');
+
+            // Redirection vers la liste des ingrédients
+            return $this->redirectToRoute('app_ingredient');
+        }
+        // Si le formulaire n'a pas été soumis ou n'est pas valide (phase GET)
+        return $this->render('ingredient/create_v2.html.twig', [
+            'form' => $crea_form->createView(),
+        ]);
+    }
+
+    //mission 15
+    #[Route('/ingredient/create_and_store_v3', name: 'ingredient.create_and_store_v3', methods: ['GET','POST'])]
+    public function create_and_store_v3(Request $request, EntityManagerInterface $entity_manager): Response
+    {
+        //instanciation de l'objet ingredient
+        $ingredient = new Ingredient();
+
+        // 14. Date de création automatique (exclue du formulaire HTML)
+        // Si tu as un attribut createdAt dans ton entité Ingredient :
+        if (method_exists($ingredient, 'setCreatedAt')) {
+            $ingredient->setCreatedAt(new \DateTimeImmutable());
+        }
+        //construction du form avec les element nom et price des ingredient
+        $crea_form = $this->createForm(IngredientFormType_v3::class, $ingredient, [
+            'submit_label' => 'Creer mon ingredient',
+        ]);
+        
+        //
+        $crea_form->handleRequest($request);  
+        //verif de la soumission et de la validation du formulaire
+        if($crea_form->isSubmitted() && $crea_form->isValid()){
+            //recup des donnees du form
+            $data = $crea_form->getData();
+            // permet d'inspecter data lors du test
+            //dd($data);
+
+            // Persistance et enregistrement en BDD
+            $entity_manager->persist($ingredient);
+            $entity_manager->flush();
+
+            // 9. Ajout du message flash
+            $this->addFlash('success', 'Votre ingrédient a bien été créé avec succès !');
+
+            // Redirection vers la liste des ingrédients
+            return $this->redirectToRoute('app_ingredient');
+        }
+        // Si le formulaire n'a pas été soumis ou n'est pas valide (phase GET)
+        return $this->render('ingredient/create_v3.html.twig', [
+            'crea_form' => $crea_form->createView(),
+        ]);
+    }
+
+    //mission 16 le CRUD
+    #[Route('/ingredient/edit/{id}', name: 'ingredient.edit', methods: ['GET', 'PUT', 'POST'])]
+    public function edit(
+        int $id,
+        IngredientRepository $repository,
+        Request $request,
+        EntityManagerInterface $entity_manager
+    ): Response {
+        //recup de l'ingredient en BD
+        $ingredient= $repository->find($id);
+
+        if (!$ingredient) {
+            throw $this->createNotFoundException('Ingrédient non trouvé.');
+        }
+        //creation du formulaire
+        $form = $this->createForm(IngredientFormType_v3::class, $ingredient, [
+            'method' => 'PUT',
+            'submit_label' => 'Enregistrer les modifications',
+        ]);
+        //traitement de la requette
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            // 9. Sauvegarde (flush suffit car l'entité est déjà suivie par Doctrine)
+            $entity_manager->flush();
+
+            // 10. Message flash
+            $this->addFlash('success', 'Votre ingrédient a été modifié avec succès !');
+
+            // Redirection
+            return $this->redirectToRoute('app_ingredient');
+        }
+
+        return $this->render('ingredient/create_v3.html.twig', [
+            'crea_form' => $form->createView(),
+        ]);
+        
+    }
 }

@@ -5,8 +5,14 @@
 {% block body %}
 <div class="container mt-4">
     <h1 class="mb-4">Liste des ingrédients</h1>
-
+    {# affiche le message flash en cas de succes #}
     {% if ingredients is not empty %}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success mt-3">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         <table class="table table-striped table-hover table-bordered align-middle">
             <thead class="table-dark">
                 <tr>

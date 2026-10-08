@@ -14,12 +14,12 @@ class Ingredient
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank(massage: 'Le nom est obligatoire')]
+    #[Assert\NotBlank(message: 'Le nom de l\'ingredient est obligatoire')]
     #[Assert\Length(min: 2, max: 50)]
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
-    #[Assert\NotBlank(massage: 'Le prix est obligatoire')]
+    #[Assert\Positive(message: 'Le prix doit être strictement supérieur à 0.')]
     #[Assert\Range(min: 2, max: 200)]
     #[ORM\Column]
     private ?float $price = null;

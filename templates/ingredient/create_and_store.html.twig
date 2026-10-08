@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un ingrédient (Méthode 2){% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Créer un nouvel ingrédient (methode 2)</h1>
+
+    {# Pas besoin de spécifier d'action : le formulaire soumet automatiquement sur la même URL #}
+    {{ form(form) }}
+
+    <a href="{{ path('app_ingredient') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+</div>
+{% endblock %}
