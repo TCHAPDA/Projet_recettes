@@ -5,6 +5,13 @@
 {% block body %}
 <div class="container mt-4">
     <h1 class="mb-4">Liste des ingrédients</h1>
+    {# essaie d'utilisation des assets #}
+    <div class="text-center my-3">
+        <img src="{{ asset('images/test.png') }}" alt="Image de test" class="img-thumbnail" style="width: 150px;">
+    </div>
+    {# boutton de creation d'ingrediens mission 18#}
+    <a href="{{ path('ingredient.create_and_store_v3') }}" class="btn btn-primary my-3">Créer un ingrédient</a>
+
     {# affiche le message flash en cas de succes #}
     {% if ingredients is not empty %}
         {% for message in app.flashes('success') %}
@@ -29,6 +36,16 @@
                         <td>{{ ingredient.name }}</td>
                         <td>{{ ingredient.price|number_format(2, ',', ' ') }} €</td>
                         <td>{{ ingredient.creatdAt ? ingredient.creatdAt|date('d/m/Y') : '-' }}</td>
+                        <td class="d-flex gap-2">
+                            {#  Lien Modifier en GET mission 18#}
+                            <a href="{{ path('ingredient.edit', {id: ingredient.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                            {# Formulaire POST avec simulation DELETE mission 18#}
+                            <form action="{{ path('ingredient.delete', {id: ingredient.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet ingrédient ?');">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

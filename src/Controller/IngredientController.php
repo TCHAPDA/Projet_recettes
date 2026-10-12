@@ -354,4 +354,30 @@ final class IngredientController extends AbstractController
         ]);
         
     }
+
+    //mission 17 supprsion
+    #[Route('/ingredient/delete/{id}', name: 'ingredient.delete', methods: ['DELETE'])]
+    public function delete (
+        int $id,
+        IngredientRepository $repository,
+        EntityManagerInterface $manager
+    ): Response{
+        // retrouver l'ingredient
+        $ingredient = $repository->find($id);
+
+        if (!$ingredient) {
+            throw $this->createNotFoundException('Ingrédient non trouvé.');
+        }
+
+        //suppresion proprement dite
+        $manager->remove($ingredient);
+        $manager->flush();
+
+        //message flash de succes
+        $this->addFlash('success', 'Votre ingrédient a été supprimé avec succès !');
+
+        //redirection vers la liste des ingredients
+        return $this->redirectToRoute('app_ingredient');
+    }
+
 }
