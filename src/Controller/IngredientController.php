@@ -379,5 +379,39 @@ final class IngredientController extends AbstractController
         //redirection vers la liste des ingredients
         return $this->redirectToRoute('app_ingredient');
     }
+    //mission 18 methode 2
+    //pour tester les methode dql remplacer sql par dql lors des appel de methode
+    #[Route('/ingredient/sql', name: 'ingredient.index.sql', methods: ['GET'])]
+    public function index_sql(IngredientRepository $repository): Response
+    {
+        //appel de notre methode personalisé
+        $ingredients = $repository->findAll_sql();
+
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredients,
+        ]);
+    }
+
+    #[Route('/ingredient/tomatesql', name: 'ingredient.tomate.index.sql', methods: ['GET'])]
+    public function index_tomate_sql(IngredientRepository $repository): Response
+    {
+        //appel de notre methode personalisé
+        $ingredients = $repository->find_ingredient_tomato_sql();
+
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredients,
+        ]);
+    }
+
+    #[Route('/ingredient/price-sql', name: 'ingredient.price_sql', methods: ['GET'])]
+    public function index_ingredient_by_price_sql(IngredientRepository $repository): Response
+    {
+        // On fixe un prix max de test (ex: 5.00 €)
+        $ingredients = $repository->find_ingredient_by_price_sql(51.00);
+
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredients,
+        ]);
+}
 
 }

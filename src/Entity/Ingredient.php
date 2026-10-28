@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\IngredientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,6 +28,12 @@ class Ingredient
 
     #[ORM\Column]
     private ?\DateTimeImmutable $creatdAt = null;
+
+    /**
+     * @var Collection<int, Recette>
+     */
+    #[ORM\ManyToMany(targetEntity: Recette::class, mappedBy: 'ingredients')]
+    private Collection $recettes;
 
     public function getId(): ?int
     {
@@ -70,5 +78,33 @@ class Ingredient
     //ce constructeur permet d'assigner une date de creation a creatAd a chaque fois qu'on cree un ingredient
     public function __construct() {
         $this->creatdAt = new \DateTimeImmutable();
+        $this->recettes = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, Recette>
+     */
+    public function getRecettes(): Collection
+    {
+        return $this->recettes;
+    }
+
+    public function addRecette(Recette $recette): static
+    {
+        if (!$this->recettes->contains($recette)) {
+            $this->recettes->add($recette);
+            $recette->addIngredient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecette(Recette $recette): static
+    {
+        if ($this->recettes->removeElement($recette)) {
+            $recette->removeIngredient($this);
+        }
+
+        return $this;
     }
 }
