@@ -16,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
-
+use App\Repository\RecetteRepository;
 
 final class IngredientController extends AbstractController
 {
@@ -412,6 +412,17 @@ final class IngredientController extends AbstractController
         return $this->render('ingredient/index.html.twig', [
             'ingredients' => $ingredients,
         ]);
-}
+    }
+
+    #[Route('/recette/ingredient', name: 'app_recette_ingredient')]
+    public function index_recettes(RecetteRepository $recetteRepository): Response
+    {
+        
+        $recettes = $recetteRepository->les10firstrecettesDql();
+
+        return $this->render('recette/ingredient.html.twig', [
+            'recettes' => $recettes,
+        ]);
+    }
 
 }

@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>10 Premières Recettes et leurs Ingrédients</h1>
+        
+        <ul>
+            {% for recette in recettes %}
+                <li class="mb-3">
+                    <strong>{{ recette.nom }}</strong> ({{ recette.temps }} min - {{ recette.prix }} €)
+                    <br>
+                    <small>Description : {{ recette.description }}</small>
+                    
+                    <p class="mt-1 mb-0"><strong>Ingrédients :</strong></p>
+                    <ul>
+                        {% for ingredient in recette.ingredients %}
+                            <li>{{ ingredient.name }} ({{ ingredient.price }} €)</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

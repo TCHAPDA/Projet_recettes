@@ -77,7 +77,7 @@ class Recette
         return $this;
     }
 
-    public function getTemps(): ?Number
+    public function getTemps(): ?int
     {
         return $this->temps;
     }
