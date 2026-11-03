@@ -1,0 +1,9 @@
+<ul>
+    {% for recette in recettes %}
+        <li class="mb-3">
+            <strong>{{ recette.nom }}</strong> ({{ recette.temps }} min)
+            <br>
+            <small>{{ recette.description }}</small>
+        </li>
+    {% endfor %}
+</ul>

@@ -51,6 +51,11 @@ class Recette
      * @var Collection<int, Ingredient>
      */
     #[ORM\ManyToMany(targetEntity: Ingredient::class, inversedBy: 'recettes')]
+    #[Assert\Count(
+        min: 3,
+        max: 3,
+        exactMessage: "vous devez selectionner exactement 3 ingredients."
+    )]
     private Collection $ingredients;
 
     public function __construct()

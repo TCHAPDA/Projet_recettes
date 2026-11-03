@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Liste de toutes les recettes</h1>
+        
+        <p class="text-muted">Nombre total de recettes : {{ recettes|length }}</p>
+        
+        <ul class="list-group">
+            {% for recette in recettes %}
+                <li class="list-group-item mb-3">
+                    <h3>{{ recette.nom }}</h3>
+                    <p>
+                        <strong>Temps :</strong> {{ recette.temps }} min | 
+                        <strong>Prix :</strong> {{ recette.prix }} € | 
+                        <strong>Difficulté :</strong> {{ recette.difficulte ?? 'Non spécifiée' }}
+                    </p>
+                    <p>{{ recette.description }}</p>
+                    
+                    <strong>Ingrédients :</strong>
+                    <ul>
+                        {% for ingredient in recette.ingredients %}
+                            <li>{{ ingredient.name }} ({{ ingredient.price }} €)</li>
+                        {% else %}
+                            <li><em>Aucun ingrédient associé.</em></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% else %}
+                <p>Aucune recette trouvée dans la base de données.</p>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

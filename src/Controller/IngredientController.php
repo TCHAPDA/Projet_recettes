@@ -414,15 +414,36 @@ final class IngredientController extends AbstractController
         ]);
     }
 
-    #[Route('/recette/ingredient', name: 'app_recette_ingredient')]
+    #[Route('/recette/dql', name: 'app_recette_dql')]
     public function index_recettes(RecetteRepository $recetteRepository): Response
     {
         
         $recettes = $recetteRepository->les10firstrecettesDql();
-
+        //pour tout les test de la mission 20 remplacer le nom de la fonction
+        //precedente par celle a tester (regarder dans ingredientController(DQL))
         return $this->render('recette/ingredient.html.twig', [
             'recettes' => $recettes,
         ]);
     }
 
+    #[Route('/recette/sql', name: 'app_recette_sql')]
+    public function recettessql(RecetteRepository $recetteRepository): Response
+    {
+        
+        $recettes = $recetteRepository->les10firstrecettesSql();
+        //pour tout les test de la mission 20 remplacer le nom de la fonction
+        //precedente par celle a tester (regarder dans ingredientController(SQL))
+        return $this->render('recette/recettesql.html.twig', [
+            'recettes' => $recettes,
+        ]);
+    }
+    #[Route('/recette', name: 'app_recette')]
+    public function recettes(RecetteRepository $recetteRepository) 
+    {
+        $recettes =$recetteRepository->recettetingredientsDql();
+
+        return $this->render('recette/index.html.twig',[
+            'recettes' => $recettes,
+        ]);
+    }
 }
